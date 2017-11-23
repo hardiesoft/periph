@@ -339,11 +339,16 @@ func (c *cciConn) String() string {
 // waitIdle waits for the busy bit to clear.
 func (c *cciConn) waitIdle() (StatusBit, error) {
 	// Do not take the lock.
+	timeout := time.After(500 * time.Millisecond)
 	for {
 		if s, err := c.r.ReadUint16(regStatus); err != nil || StatusBit(s)&StatusBusy == 0 {
 			return StatusBit(s), err
 		}
-		sleep(5 * time.Millisecond)
+		select {
+		case <-timeout:
+			return StatusBit(0), errors.New("timed out waiting for idle")
+		case <-time.After(5 * time.Millisecond):
+		}
 	}
 }
 
