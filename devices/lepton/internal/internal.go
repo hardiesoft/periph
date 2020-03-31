@@ -20,6 +20,13 @@ const (
 	Enabled  Flag = 1
 )
 
+func BoolToFlag(b bool) Flag {
+	if b {
+		return Enabled
+	}
+	return Disabled
+}
+
 // DurationMS is duration in millisecond.
 //
 // It is an implementation detail of the protocol.
@@ -28,6 +35,11 @@ type DurationMS uint32
 // ToD converts a millisecond based timing to time.Duration.
 func (d DurationMS) ToD() time.Duration {
 	return time.Duration(d) * time.Millisecond
+}
+
+// DurationToMS converts a time.Duration to a DurationMS.
+func DurationToMS(d time.Duration) DurationMS {
+	return DurationMS(d / time.Millisecond)
 }
 
 // CentiK is temperature in 0.01°K
