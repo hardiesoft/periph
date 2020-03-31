@@ -305,6 +305,24 @@ func (d *Dev) GetFFCModeControl() (*FFCMode, error) {
 	}, nil
 }
 
+// SetFFCModeControl sets the parameters relating to calibration. It
+// is highly recommended to use the result of a recent GetFFCModeControl
+// call as the basis of the input here.
+func (d *Dev) SetFFCModeControl(m *FFCMode) error {
+	v := internal.FFCMode{
+		FFCShutterMode:          uint32(m.FFCShutterMode),
+		ShutterTempLockoutState: uint32(m.ShutterTempLockoutState),
+		VideoFreezeDuringFFC:    internal.BoolToFlag(m.VideoFreezeDuringFFC),
+		FFCDesired:              internal.BoolToFlag(m.FFCDesired),
+		ElapsedTimeSinceLastFFC: internal.DurationToMS(m.ElapsedTimeSinceLastFFC),
+		DesiredFFCPeriod:        internal.DurationToMS(m.DesiredFFCPeriod),
+		ExplicitCommandToOpen:   internal.BoolToFlag(m.ExplicitCommandToOpen),
+		DesiredFFCTempDelta:     uint16(m.DesiredFFCTempDelta / 10),
+		ImminentDelay:           uint16(m.ImminentDelay),
+	}
+	return d.c.set(sysFFCMode, &v)
+}
+
 // GetShutterPos returns the position of the shutter if present.
 func (d *Dev) GetShutterPos() (ShutterPos, error) {
 	out := ShutterPosUnknown
