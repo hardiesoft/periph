@@ -259,6 +259,14 @@ func (d *Dev) GetSerial() (uint64, error) {
 	return d.serial, nil
 }
 
+// Get the OEM part number
+func (d *Dev) GetPartNum() ([32]byte, error) {
+	var buffer [32]byte
+	if err := d.c.get(oemPartNumber, &buffer); err != nil {
+		return buffer, err
+	}
+}
+
 // GetUptime returns the uptime. Rolls over after 1193 hours.
 func (d *Dev) GetUptime() (time.Duration, error) {
 	var v internal.DurationMS
