@@ -265,6 +265,7 @@ func (d *Dev) GetPartNum() ([32]byte, error) {
 	if err := d.c.get(oemPartNumber, &buffer); err != nil {
 		return buffer, err
 	}
+	return buffer, nil
 }
 
 // GetUptime returns the uptime. Rolls over after 1193 hours.
