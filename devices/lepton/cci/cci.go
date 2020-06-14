@@ -22,6 +22,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+	"log"
 	"reflect"
 	"strconv"
 	"strings"
@@ -285,8 +286,9 @@ func (d *Dev) GetCustomerPartNum() ([32]byte, error) {
 }
 
 func (d *Dev) GetTLinearEnabled() (bool, error) {
-	b := 0
+	b := uint32(0)
 	if err := d.c.get(radTLinearEnableState, &b); err != nil {
+		log.Println("Got error accessing TLinear")
 		return false, err
 	}
 	return b != 0, nil
