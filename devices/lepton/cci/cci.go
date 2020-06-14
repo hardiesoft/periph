@@ -269,6 +269,7 @@ func (d *Dev) GetPartNum() ([32]byte, error) {
 	return buffer, nil
 }
 
+// Get software + dsp revision information
 func (d *Dev) GetSoftwareVersion() ([8]byte, error) {
 	var buffer [8]byte
 	if err := d.c.get(oemSoftwareRevision, &buffer); err != nil {
@@ -277,18 +278,11 @@ func (d *Dev) GetSoftwareVersion() ([8]byte, error) {
 	return buffer, nil
 }
 
-func (d *Dev) GetCustomerPartNum() ([32]byte, error) {
-	var buffer [32]byte
-	if err := d.c.get(oemCustomerPartNumber, &buffer); err != nil {
-		return buffer, err
-	}
-	return buffer, nil
-}
-
+// See if TLinear is available, and enabled.
+// If it errors, that means we are not on a radiometric lepton model.
 func (d *Dev) GetTLinearEnabled() (bool, error) {
 	b := uint32(0)
 	if err := d.c.get(radTLinearEnableState, &b); err != nil {
-		log.Println("Got error accessing TLinear")
 		return false, err
 	}
 	return b != 0, nil
