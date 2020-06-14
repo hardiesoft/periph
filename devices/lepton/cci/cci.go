@@ -259,6 +259,34 @@ func (d *Dev) GetSerial() (uint64, error) {
 	return d.serial, nil
 }
 
+// Get the OEM part number
+func (d *Dev) GetPartNum() ([32]byte, error) {
+	var buffer [32]byte
+	if err := d.c.get(oemPartNumber, &buffer); err != nil {
+		return buffer, err
+	}
+	return buffer, nil
+}
+
+// Get software + dsp revision information
+func (d *Dev) GetSoftwareVersion() ([8]byte, error) {
+	var buffer [8]byte
+	if err := d.c.get(oemSoftwareRevision, &buffer); err != nil {
+		return buffer, err
+	}
+	return buffer, nil
+}
+
+// See if TLinear is available, and enabled.
+// If it errors, that means we are not on a radiometric lepton model.
+func (d *Dev) GetTLinearEnabled() (bool, error) {
+	b := uint32(0)
+	if err := d.c.get(radTLinearEnableState, &b); err != nil {
+		return false, err
+	}
+	return b != 0, nil
+}
+
 // GetUptime returns the uptime. Rolls over after 1193 hours.
 func (d *Dev) GetUptime() (time.Duration, error) {
 	var v internal.DurationMS
@@ -610,6 +638,8 @@ const (
 	vidFocusMetricThreshold   command = 0x0314 // 2   GET/SET
 	vidFocusMetricGet         command = 0x0318 // 2   GET
 	vidVideoFreezeEnable      command = 0x0324 // 2   GET/SET
+
+	radTLinearEnableState command = 0x4EC0 // 2   GET
 )
 
 // TODO(maruel): Enable RadXXX commands.
