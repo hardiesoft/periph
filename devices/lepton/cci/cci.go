@@ -646,7 +646,7 @@ const (
 	vidFocusMetricGet         command = 0x0318 // 2   GET
 	vidVideoFreezeEnable      command = 0x0324 // 2   GET/SET
 
-	radTLinearEnableState command = 0x4EC1 // 2   GET
+	radTLinearEnableState command = 0x4EC0 // 2   GET
 )
 
 // TODO(maruel): Enable RadXXX commands.
