@@ -268,6 +268,30 @@ func (d *Dev) GetPartNum() ([32]byte, error) {
 	return buffer, nil
 }
 
+func (d *Dev) GetSoftwareVersion() ([8]byte, error) {
+	var buffer [8]byte
+	if err := d.c.get(oemSoftwareRevision, &buffer); err != nil {
+		return buffer, err
+	}
+	return buffer, nil
+}
+
+func (d *Dev) GetCustomerPartNum() ([32]byte, error) {
+	var buffer [32]byte
+	if err := d.c.get(oemCustomerPartNumber, &buffer); err != nil {
+		return buffer, err
+	}
+	return buffer, nil
+}
+
+func (d *Dev) GetTLinearEnabled() (bool, error) {
+	b := 0
+	if err := d.c.get(radTLinearEnableState, &b); err != nil {
+		return false, err
+	}
+	return b != 0, nil
+}
+
 // GetUptime returns the uptime. Rolls over after 1193 hours.
 func (d *Dev) GetUptime() (time.Duration, error) {
 	var v internal.DurationMS
@@ -619,6 +643,8 @@ const (
 	vidFocusMetricThreshold   command = 0x0314 // 2   GET/SET
 	vidFocusMetricGet         command = 0x0318 // 2   GET
 	vidVideoFreezeEnable      command = 0x0324 // 2   GET/SET
+
+	radTLinearEnableState command = 0x4EC1 // 2   GET
 )
 
 // TODO(maruel): Enable RadXXX commands.
