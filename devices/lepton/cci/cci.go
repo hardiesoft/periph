@@ -268,13 +268,13 @@ func swizzleBytes(buffer []byte) {
 		i += 2
 	}
 }
-
 // Get the OEM part number
 func (d *Dev) GetPartNum() ([32]byte, error) {
 	var buffer [32]byte
 	if err := d.c.get(oemPartNumber, &buffer); err != nil {
 		return buffer, err
 	}
+
 
 	// NOTE: These bytes need to be swizzled due to endianess issues.
 	swizzleBytes(buffer[:])
@@ -667,7 +667,7 @@ const (
 	vidFocusMetricGet         command = 0x0318 // 2   GET
 	vidVideoFreezeEnable      command = 0x0324 // 2   GET/SET
 
-	radTLinearEnableState command = 0x4EC0 // 2   GET
+	radTLinearEnableState     command = 0x4EC0 // 2   GET
 )
 
 // TODO(maruel): Enable RadXXX commands.
